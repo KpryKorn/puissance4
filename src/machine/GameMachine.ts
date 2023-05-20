@@ -1,20 +1,20 @@
-import { createMachine } from "xstate";
+import { InterpreterFrom, createMachine, interpret } from "xstate";
 import { createModel } from "xstate/lib/model";
-import { GridState, Player, PlayerColor } from "../types";
-import { canJoinGuard } from "./guards";
-
-enum GameStates {
-  LOBBY = "LOBBY",
-  PLAY = "PLAY",
-  VICTORY = "VICTORY",
-  DRAW = "DRAW",
-}
+import { GameContext, GridState, Player, PlayerColor } from "../types";
+import { canDropGuard, canJoinGuard, canLeaveGuard } from "./guards";
+import {
+  dropTokenAction,
+  joinGameAction,
+  leaveGameAction,
+  switchPlayerAction,
+} from "./actions";
+import { GameStates } from "../types";
 
 export const GameModel = createModel(
   {
     players: [] as Player[],
     currentPlayer: null as null | Player["id"],
-    rowLenght: 4,
+    rowLength: 4,
     grid: [
       ["E", "E", "E", "E", "E", "E", "E"],
       ["E", "E", "E", "E", "E", "E", "E"],
@@ -51,9 +51,12 @@ export const GameMachine = GameModel.createMachine({
       on: {
         join: {
           cond: canJoinGuard,
+          actions: [GameModel.assign(joinGameAction)],
           target: GameStates.LOBBY,
         },
         leave: {
+          cond: canLeaveGuard,
+          actions: [GameModel.assign(leaveGameAction)],
           target: GameStates.LOBBY,
         },
         chooseColor: {
@@ -67,7 +70,12 @@ export const GameMachine = GameModel.createMachine({
     [GameStates.PLAY]: {
       on: {
         dropToken: {
-          target: GameStates.VICTORY,
+          cond: canDropGuard,
+          actions: [
+            GameModel.assign(dropTokenAction),
+            GameModel.assign(switchPlayerAction),
+          ],
+          target: GameStates.PLAY,
         },
       },
     },
@@ -87,3 +95,17 @@ export const GameMachine = GameModel.createMachine({
     },
   },
 });
+
+export function makeGame(
+  state: GameStates = GameStates.LOBBY,
+  context: Partial<GameContext> = {}
+): InterpreterFrom<typeof GameMachine> {
+  const machine = interpret(
+    GameMachine.withContext({
+      ...GameModel.initialContext,
+      ...context,
+    })
+  ).start();
+  machine.state.value = state;
+  return machine;
+}
