@@ -12,6 +12,11 @@ export enum GameStates {
   DRAW = "DRAW",
 }
 
+export type Position = {
+  y: number;
+  x: number;
+};
+
 export type Player = {
   id: string;
   name: string;

@@ -1,11 +1,25 @@
-import { freePositionY } from "../func/game";
-import { GameAction, GameContext } from "../types";
+import { currentPlayer, freePositionY, winningPositions } from "../func/game";
+import { GameAction, GameContext, PlayerColor } from "../types";
+import { GameModel } from "./GameMachine";
 
 export const joinGameAction: GameAction<"join"> = (context, event) => ({
   players: [...context.players, { id: event.playerId, name: event.name }],
 });
-export const leaveGameAction: GameAction<"join"> = (context, event) => ({
+
+export const leaveGameAction: GameAction<"leave"> = (context, event) => ({
   players: context.players.filter((p) => p.id !== event.playerId),
+});
+
+export const chooseColorAction: GameAction<"chooseColor"> = (
+  context,
+  event
+) => ({
+  players: context.players.map((p) => {
+    if (p.id === event.playerId) {
+      return { ...p, color: event.color };
+    }
+    return p;
+  }),
 });
 
 export const dropTokenAction: GameAction<"dropToken"> = (
@@ -24,5 +38,28 @@ export const dropTokenAction: GameAction<"dropToken"> = (
 
 export const switchPlayerAction = (context: GameContext) => ({
   currentPlayer: context.players.find((p) => p.id !== context.currentPlayer)!
+    .id,
+});
+
+export const saveWinningPositionsAction: GameAction<"dropToken"> = (
+  context,
+  event
+) => ({
+  winningPositions: winningPositions(
+    context.grid,
+    currentPlayer(context).color!,
+    event.x,
+    context.rowLength
+  ),
+});
+
+export const restartAction: GameAction<"restart"> = (context) => ({
+  winningPositions: [],
+  grid: GameModel.initialContext.grid,
+  currentPlayer: null,
+});
+
+export const setCurrentPlayerAction = (context: GameContext) => ({
+  currentPlayer: context.players.find((p) => p.color === PlayerColor.YELLOW)!
     .id,
 });

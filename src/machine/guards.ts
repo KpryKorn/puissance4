@@ -1,4 +1,9 @@
-import { freePositionY } from "../func/game";
+import {
+  countEmptyCells,
+  currentPlayer,
+  freePositionY,
+  winningPositions,
+} from "../func/game";
 import {
   GameContext,
   GameEvent,
@@ -14,7 +19,7 @@ export const canJoinGuard: GameGuard<"join"> = (context, event) => {
   );
 };
 
-export const canLeaveGuard: GameGuard<"join"> = (context, event) => {
+export const canLeaveGuard: GameGuard<"leave"> = (context, event) => {
   return !!context.players.find((p) => p.id === event.playerId);
 };
 
@@ -40,4 +45,20 @@ export const canDropGuard: GameGuard<"dropToken"> = (context, event) => {
     context.currentPlayer === event.playerId &&
     freePositionY(context.grid, event.x) >= 0
   );
+};
+
+export const isWinningMoveGuard: GameGuard<"dropToken"> = (context, event) => {
+  return (
+    canDropGuard(context, event) &&
+    winningPositions(
+      context.grid,
+      currentPlayer(context).color!,
+      event.x,
+      context.rowLength
+    ).length > 0
+  );
+};
+
+export const isDrawMoveGuard: GameGuard<"dropToken"> = (context, event) => {
+  return canDropGuard(context, event) && countEmptyCells(context.grid) <= 1;
 };
