@@ -1,0 +1,48 @@
+html,
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.players {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.player {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.disc {
+  background-color: #f6db38;
+  box-shadow: inset 0 0 0 3px #cab01e;
+  border: 2px solid #f6db38;
+  outline: 2px solid #cab01e;
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+}
+
+.disc-red {
+  background-color: #f63838;
+  box-shadow: inset 0 0 0 3px #ca1e1e;
+  border: 2px solid #f63838;
+  outline: 2px solid #ca1e1e;
+}
+
+.selector {
+  display: flex;
+  gap: 0.8rem;
+}
+.selector .disc {
+  margin: 10px;
+  transform: scale(2);
+}
