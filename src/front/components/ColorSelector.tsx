@@ -1,3 +1,4 @@
+import { discColorClass } from "../../func/color";
 import { Player, PlayerColor } from "../../types";
 
 type ColorSelectorProps = {
@@ -5,10 +6,6 @@ type ColorSelectorProps = {
   players: Player[];
   colors: PlayerColor[];
 };
-
-function discColor(color: PlayerColor) {
-  return `disc disc-${color === PlayerColor.YELLOW ? "yellow" : "red"}`;
-}
 
 export function ColorSelector({
   onSelect,
@@ -21,7 +18,7 @@ export function ColorSelector({
         {players.map((player) => (
           <div key={player.id} className="player">
             {player.name}
-            {player.color && <div className={discColor(player.color)} />}
+            {player.color && <div className={discColorClass(player.color)} />}
           </div>
         ))}
       </div>
@@ -29,7 +26,7 @@ export function ColorSelector({
       <div className="selector">
         {colors.map((color) => (
           <button
-            className={discColor(color)}
+            className={discColorClass(color)}
             key={color}
             onClick={() => onSelect(color)}
           ></button>
