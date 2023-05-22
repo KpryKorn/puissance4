@@ -53,7 +53,7 @@ export const saveWinningPositionsAction: GameAction<"dropToken"> = (
   ),
 });
 
-export const restartAction: GameAction<"restart"> = (context) => ({
+export const restartAction: GameAction<"restart"> = () => ({
   winningPositions: [],
   grid: GameModel.initialContext.grid,
   currentPlayer: null,

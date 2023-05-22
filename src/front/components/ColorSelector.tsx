@@ -25,11 +25,9 @@ export function ColorSelector({
       <h3>Sélectionnez une couleur</h3>
       <div className="selector">
         {colors.map((color) => (
-          <button
-            className={discColorClass(color)}
-            key={color}
-            onClick={() => onSelect(color)}
-          ></button>
+          <button key={color} onClick={() => onSelect(color)}>
+            <div className={discColorClass(color)}></div>
+          </button>
         ))}
       </div>
     </>

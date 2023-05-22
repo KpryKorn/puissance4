@@ -4,13 +4,7 @@ import {
   freePositionY,
   winningPositions,
 } from "../func/game";
-import {
-  GameContext,
-  GameEvent,
-  GameEvents,
-  GameGuard,
-  PlayerColor,
-} from "../types";
+import { GameGuard, PlayerColor } from "../types";
 
 export const canJoinGuard: GameGuard<"join"> = (context, event) => {
   return (
@@ -34,7 +28,7 @@ export const canChooseColorGuard: GameGuard<"chooseColor"> = (
   );
 };
 
-export const canStartGameGuard: GameGuard<"start"> = (context, event) => {
+export const canStartGameGuard: GameGuard<"start"> = (context) => {
   return context.players.filter((p) => p.color).length === 2;
 };
 

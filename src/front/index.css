@@ -14,6 +14,10 @@ button {
   background: none;
   cursor: pointer;
 }
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
 label {
   font: inherit;
@@ -121,7 +125,15 @@ input:disabled {
   width: 70%;
   height: auto;
   aspect-ratio: 1;
+}
+
+.grid .disc-yellow,
+.grid .disc-red {
   animation: Drop calc(0.2s * var(--row)) both;
+}
+
+.disc-active {
+  filter: brightness(1.5);
 }
 
 @keyframes Drop {

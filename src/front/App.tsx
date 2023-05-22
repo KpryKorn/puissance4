@@ -1,47 +1,34 @@
-import { PlayerColor } from "../types";
-import { ColorSelector } from "./components/ColorSelector";
+import { GameStates } from "../types";
 import { Grid } from "./components/Grid";
-import { NameSelector } from "./components/NameSelector";
-import { GameInfo } from "./components/GameInfo";
-import { Victory } from "./components/Victory";
+import { useGame } from "./hooks/useGame";
+import { LobbyScreen } from "./screens/LobbyScreen";
+import { PlayScreen } from "./screens/PlayScreen";
+import { currentPlayer } from "../func/game";
+import { VictoryScreen } from "./screens/VictoryScreen";
+import { DrawScreen } from "./screens/DrawScreen";
 
 function App() {
+  const { state, context, send } = useGame();
+  const canDrop = state === GameStates.PLAY;
+  const player = canDrop ? currentPlayer(context) : undefined;
+  const dropToken = canDrop
+    ? (x: number) => {
+        send({ type: "dropToken", x: x });
+      }
+    : undefined;
+
   return (
     <div className="container">
-      <NameSelector onSelect={() => null} />
-      <hr />
-      <ColorSelector
-        onSelect={() => null}
-        players={[
-          {
-            id: "1",
-            name: "John",
-            color: PlayerColor.RED,
-          },
-          {
-            id: "2",
-            name: "Sacha",
-            color: PlayerColor.YELLOW,
-          },
-        ]}
-        colors={[PlayerColor.RED, PlayerColor.YELLOW]}
-      />
-      <hr />
-      <GameInfo color={PlayerColor.RED} name="John" />
-      <Victory color={PlayerColor.RED} name="John" />
+      {state === GameStates.LOBBY && <LobbyScreen />}
+      {state === GameStates.PLAY && <PlayScreen />}
+      {state === GameStates.VICTORY && <VictoryScreen />}
+      {state === GameStates.DRAW && <DrawScreen />}
       <Grid
-        onDrop={() => null}
-        color={PlayerColor.RED}
-        grid={[
-          ["E", "E", "E", "E", "E", "E", "R"],
-          ["E", "E", "E", "E", "E", "R", "Y"],
-          ["E", "E", "E", "E", "E", "R", "R"],
-          ["E", "E", "E", "E", "E", "R", "Y"],
-          ["E", "E", "E", "E", "E", "Y", "R"],
-          ["E", "E", "E", "E", "E", "Y", "Y"],
-        ]}
+        winningPositions={context.winningPositions}
+        grid={context.grid}
+        onDrop={dropToken}
+        color={player?.color}
       />
-      <hr />
     </div>
   );
 }
