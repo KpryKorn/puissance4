@@ -1,3 +1,12 @@
+## Comment jouer ?
+
+Pour pouvoir jouer, il faut :
+
+- cloner ce repo
+- lancer la commande `npm run dev`
+- s'attribuer un pseudo, choisir sa couleur
+- dominer son adversaire 😎
+
 ## Challenge
 
 Le but de ce challenge est, pour moi, de pouvoir me former à l'écosystème JavaScript dans sa globalité => définir des règles de typage via TypeScript, pratiquer le JS backend via NodeJS et Fastify, gérer la communication client <---> serveur via l'API Websocket, enfin gérer le frontend et les états de l'application via React et Xstate.
